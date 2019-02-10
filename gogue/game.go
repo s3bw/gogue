@@ -7,6 +7,7 @@ import (
 
 	"github.com/foxyblue/gogue/gogue/area"
 	"github.com/foxyblue/gogue/gogue/creature"
+	"github.com/foxyblue/gogue/gogue/feed"
 	"github.com/gdamore/tcell"
 )
 
@@ -17,11 +18,14 @@ type Game struct {
 	// Level refers to the level at which the active area exists
 	Level int
 
-	// CurrentArea refers to the active area to which the player is in.
+	// ActiveArea refers to the active area to which the player is in.
 	ActiveArea *area.Area
 
 	// Player refers to the user
 	Player *creature.Player
+
+	// stdFeed is the in game feed
+	stdFeed *feed.FeedStack
 }
 
 // NewGame creates a new game instance
@@ -52,29 +56,39 @@ func newScreen() tcell.Screen {
 	return s
 }
 
-func (g *Game) CreateArea() {
-	area := area.NewArea(g.Level, g.Screen)
-	g.ActiveArea = area
+// CreateArea creates a new playable area
+func (game *Game) CreateArea() {
+	area := area.NewArea(game.Level, game.Screen)
+	game.ActiveArea = area
 }
 
-func (g *Game) CreatePlayer() {
-	player := creature.NewPlayer(g.ActiveArea)
-	g.Player = player
+// CreatePlayer creates a user
+func (game *Game) CreatePlayer() {
+	player := creature.NewPlayer(game.ActiveArea)
+	game.Player = player
 }
 
-func (g *Game) Draw() {
-	g.Screen.Clear()
-	g.ActiveArea.Draw()
+// Draw will render the game on screen
+func (game *Game) Draw() {
+	game.Screen.Clear()
+	game.ActiveArea.Draw()
 	st := tcell.StyleDefault
-	p := g.Player.Creature
-	g.Screen.SetCell(p.X, p.Y, st.Background(p.Color), p.Appearance)
-	g.Screen.Show()
+	p := game.Player.Creature
+	game.Screen.SetCell(p.X, p.Y, st.Background(p.Color), p.Appearance)
+	game.Screen.Show()
+}
+
+// CreateFeed creates a new stack
+func (game *Game) CreateFeed() {
+	f := feed.NewFeed(game.Screen)
+	game.stdFeed = f
 }
 
 func main() {
 	game := NewGame()
 	game.CreateArea()
 	game.CreatePlayer()
+	game.CreateFeed()
 
 	// This is the Key Listener Channel
 	quit := make(chan struct{})
