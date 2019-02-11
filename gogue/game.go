@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"os"
-	"time"
 
 	"github.com/foxyblue/gogue/gogue/area"
 	"github.com/foxyblue/gogue/gogue/creature"
@@ -31,13 +30,12 @@ type Game struct {
 // NewGame creates a new game instance
 func NewGame() *Game {
 	level := 0
+	playerX, playerY := 10, 10
 
 	screen := newScreen()
-	area := area.NewArea(level, screen)
-	x := area.Start.X
-	y := area.Start.Y
+	area := area.NewArea(playerX, playerY, level, screen)
 	feed := feed.NewFeed(screen)
-	player := creature.NewPlayer(x, y)
+	player := creature.NewPlayer(playerX, playerY)
 	return &Game{
 		Screen:     screen,
 		ActiveArea: area,
@@ -70,9 +68,7 @@ func newScreen() tcell.Screen {
 func (game *Game) Draw() {
 	game.Screen.Clear()
 	game.ActiveArea.Draw()
-	st := tcell.StyleDefault
-	p := game.Player.Creature
-	game.Screen.SetCell(p.X, p.Y, st.Background(p.Color), p.Appearance)
+	game.Player.Creature.Draw(game.Screen)
 	game.Feed.Draw()
 	game.Screen.Show()
 }
@@ -92,8 +88,6 @@ func main() {
 				case tcell.KeyEnter:
 					close(quit)
 					return
-				case tcell.KeyCtrlL:
-					game.Screen.Sync()
 				case tcell.KeyRune:
 					switch ev.Rune() {
 					case 'k':
@@ -105,28 +99,21 @@ func main() {
 					case 'l':
 						game.Player.Creature.Move(1, 0)
 					}
-					game.Draw()
 				}
-			case *tcell.EventResize:
-				game.Screen.Sync()
 			}
+			// Game steps exist here:
+			game.Draw()
+			game.Feed.Log("Step")
 		}
 	}()
 
 	// Main Gameloop
-	cnt := 0
-	dur := time.Duration(0)
 gameLoop:
 	for {
 		select {
 		case <-quit:
 			break gameLoop
-		case <-time.After(time.Millisecond * 50):
 		}
-		start := time.Now()
-		game.Draw()
-		cnt++
-		dur += time.Now().Sub(start)
 	}
 
 	game.Screen.Fini()
