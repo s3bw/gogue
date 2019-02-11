@@ -31,6 +31,8 @@ func NewFeed(s tcell.Screen) *Feed {
 	}
 }
 
+// Log adds an item to the queue, the feed displays a maximum
+// number of lines, thus we dequeue the older messages.
 func (f *Feed) Log(text string) {
 	if f.Queue.Size() >= f.lines {
 		f.Queue.Dequeue()

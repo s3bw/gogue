@@ -30,10 +30,20 @@ type Game struct {
 
 // NewGame creates a new game instance
 func NewGame() *Game {
+	level := 0
+
+	screen := newScreen()
+	area := area.NewArea(level, screen)
+	x := area.Start.X
+	y := area.Start.Y
+	feed := feed.NewFeed(screen)
+	player := creature.NewPlayer(x, y)
 	return &Game{
-		Screen: newScreen(),
-		// Player: newPlayer(),
-		Level: 0,
+		Screen:     screen,
+		ActiveArea: area,
+		Player:     player,
+		Level:      0,
+		Feed:       feed,
 	}
 }
 
@@ -56,18 +66,6 @@ func newScreen() tcell.Screen {
 	return s
 }
 
-// CreateArea creates a new playable area
-func (game *Game) CreateArea() {
-	area := area.NewArea(game.Level, game.Screen)
-	game.ActiveArea = area
-}
-
-// CreatePlayer creates a user
-func (game *Game) CreatePlayer(x, y int) {
-	player := creature.NewPlayer(x, y)
-	game.Player = player
-}
-
 // Draw will render the game on screen
 func (game *Game) Draw() {
 	game.Screen.Clear()
@@ -79,21 +77,9 @@ func (game *Game) Draw() {
 	game.Screen.Show()
 }
 
-// CreateFeed creates a new message queue
-func (game *Game) CreateFeed() {
-	f := feed.NewFeed(game.Screen)
-	game.Feed = f
-}
-
 func main() {
 	game := NewGame()
-	game.CreateArea()
-	x := game.ActiveArea.Start.X
-	y := game.ActiveArea.Start.Y
-	game.CreatePlayer(x, y)
-	game.CreateFeed()
-	game.Feed.Log("This is text")
-	game.Feed.Log("This is text")
+	game.Feed.Log("A new game has started!")
 
 	// This is the Key Listener Channel
 	quit := make(chan struct{})
