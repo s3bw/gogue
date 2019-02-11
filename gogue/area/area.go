@@ -24,17 +24,23 @@ func NewArea(pX, pY, level int, s tcell.Screen) *Area {
 
 	b := display.NewBox(x, y, w, h, s)
 
+	// Specify parameters for the new domain.
 	start := &domain.Coord{X: pX, Y: pY}
 	params := make(map[string]interface{})
 	params["start"] = start
+	params["maxX"], params["maxY"] = w, h
 
-	domain, _ := factory.Create("blank", params)
+	newDomain, _ := factory.Create("blank", params)
+	newDomain.Generate()
 	return &Area{
 		Box:    b,
 		Screen: s,
-		Domain: domain,
+		Domain: newDomain,
 	}
 }
+
+// Move the domain stuff here...
+// func NewDomain() {}
 
 func (a *Area) playerXY() (int, int) {
 	coord := a.Domain.StartLocation()
@@ -44,6 +50,7 @@ func (a *Area) playerXY() (int, int) {
 // Draw the contents of the area
 func (a *Area) Draw() {
 	a.Box.Draw()
+	a.Domain.Draw()
 
 	// This is where we should draw the contents of the game
 }

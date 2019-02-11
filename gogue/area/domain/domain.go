@@ -12,7 +12,7 @@ type Domain interface {
 
 	// Generate should create a new grid and fill the grid with
 	// contents with which the player interacts
-	Generate(px, py, lvl int)
+	Generate()
 
 	// StartLocation defines the point at which the player enters
 	// this is usually random.
