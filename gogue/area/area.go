@@ -1,8 +1,8 @@
 package area
 
 import (
-	"github.com/foxyblue/gogue/gogue/area/domain"
-	"github.com/foxyblue/gogue/gogue/area/domain/factory"
+	"github.com/foxyblue/gogue/gogue/area/biome"
+	"github.com/foxyblue/gogue/gogue/area/biome/factory"
 	"github.com/foxyblue/gogue/gogue/display"
 	"github.com/gdamore/tcell"
 )
@@ -13,7 +13,7 @@ type Area struct {
 
 	Screen tcell.Screen
 
-	Domain domain.Domain
+	Biome biome.Biome
 }
 
 // NewArea creates a new playable area
@@ -25,32 +25,35 @@ func NewArea(pX, pY, level int, s tcell.Screen) *Area {
 	b := display.NewBox(x, y, w, h, s)
 
 	// Specify parameters for the new domain.
-	start := &domain.Coord{X: pX, Y: pY}
+	start := &biome.Coord{X: pX, Y: pY}
 	params := make(map[string]interface{})
 	params["start"] = start
 	params["maxX"], params["maxY"] = w, h
 
-	newDomain, _ := factory.Create("blank", params)
-	newDomain.Generate()
+	newBiome, err := factory.Create("blank", params)
+	if err != nil {
+		panic(err)
+	}
+	newBiome.Generate()
 	return &Area{
 		Box:    b,
 		Screen: s,
-		Domain: newDomain,
+		Biome:  newBiome,
 	}
 }
 
 // Move the domain stuff here...
-// func NewDomain() {}
+// func NewBiome() {}
 
 func (a *Area) playerXY() (int, int) {
-	coord := a.Domain.StartLocation()
+	coord := a.Biome.StartLocation()
 	return coord.X, coord.Y
 }
 
 // Draw the contents of the area
 func (a *Area) Draw() {
 	a.Box.Draw()
-	a.Domain.Draw()
+	a.Biome.Draw()
 
 	// This is where we should draw the contents of the game
 }

@@ -1,11 +1,7 @@
-package domain
+package biome
 
-type Coord struct {
-	X, Y int
-}
-
-// Domain represents the level with which the player interacts
-type Domain interface {
+// Biome represents the level with which the player interacts
+type Biome interface {
 	// Draw should draw all the contents of the domain, e.g. the
 	// creatures, items, walls, stairs and doors.
 	Draw()
