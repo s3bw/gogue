@@ -25,7 +25,7 @@ type Game struct {
 	Player *creature.Player
 
 	// stdFeed is the in game feed
-	StdFeed *feed.Feed
+	Feed *feed.Feed
 }
 
 // NewGame creates a new game instance
@@ -75,14 +75,14 @@ func (game *Game) Draw() {
 	st := tcell.StyleDefault
 	p := game.Player.Creature
 	game.Screen.SetCell(p.X, p.Y, st.Background(p.Color), p.Appearance)
-	game.StdFeed.Draw()
+	game.Feed.Draw()
 	game.Screen.Show()
 }
 
 // CreateFeed creates a new message queue
 func (game *Game) CreateFeed() {
 	f := feed.NewFeed(game.Screen)
-	game.StdFeed = f
+	game.Feed = f
 }
 
 func main() {
@@ -92,7 +92,8 @@ func main() {
 	y := game.ActiveArea.Start.Y
 	game.CreatePlayer(x, y)
 	game.CreateFeed()
-	game.StdFeed.Feed.Enqueue("This is text")
+	game.Feed.Log("This is text")
+	game.Feed.Log("This is text")
 
 	// This is the Key Listener Channel
 	quit := make(chan struct{})

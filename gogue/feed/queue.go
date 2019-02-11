@@ -1,33 +1,35 @@
 /*Package feed uses a queue*/
 package feed
 
+// Queue implementation of a queue which queues arrays of runes
 type Queue interface {
-	Enqueue(obj interface{})
-	Dequeue() interface{}
+	Enqueue(obj []rune)
+	Dequeue() []rune
 	IsEmpty() bool
 	Size() int
-	Iterate() <-chan interface{}
+	Iterate() <-chan []rune
 }
 
 // LinkedList implements the queue
-type queueLinkedList struct {
-	First  *Node
-	Last   *Node
+type queue struct {
+	First  *node
+	Last   *node
 	Length int
 }
 
-type Node struct {
-	Next  *Node
-	Value interface{}
+type node struct {
+	Next  *node
+	Value []rune
 }
 
+// CreateQueue returns a new queue
 func CreateQueue() Queue {
-	return &queueLinkedList{}
+	return &queue{}
 }
 
-func (q queueLinkedList) Enqueue(value interface{}) {
+func (q *queue) Enqueue(value []rune) {
 	oldLast := q.Last
-	q.Last = &Node{}
+	q.Last = &node{}
 	q.Last.Value = value
 
 	if q.IsEmpty() {
@@ -38,7 +40,7 @@ func (q queueLinkedList) Enqueue(value interface{}) {
 	q.Length++
 }
 
-func (q *queueLinkedList) Dequeue() interface{} {
+func (q *queue) Dequeue() []rune {
 	if !q.IsEmpty() {
 		item := q.First.Value
 		q.Length--
@@ -48,19 +50,24 @@ func (q *queueLinkedList) Dequeue() interface{} {
 		}
 		return item
 	}
-	return 0
+	return []rune("")
 }
 
-func (q *queueLinkedList) IsEmpty() bool {
+func (q *queue) IsEmpty() bool {
 	return q.Size() == 0
 }
 
-func (q *queueLinkedList) Size() int {
+func (q *queue) Size() int {
 	return q.Length
 }
 
-func (q *queueLinkedList) Iterate() <-chan interface{} {
-	ch := make(chan interface{})
+// Iterate goes through the list and passes the next item to the channel
+// we have not called this function on the pointer (*) since we want to
+// keep the items in the list, instead of 'Dequeuing' them. An alternative
+// approach would be to return the 'Next' item instead of pop'ing each
+// item
+func (q queue) Iterate() <-chan []rune {
+	ch := make(chan []rune)
 	go func() {
 		for {
 			if q.IsEmpty() {
