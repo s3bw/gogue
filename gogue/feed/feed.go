@@ -18,8 +18,8 @@ type Feed struct {
 // NewArea creates a new playable area
 func NewFeed(s tcell.Screen) *Feed {
 	maxW, maxH := s.Size()
-	w, y := maxW-2, int(float64(maxH)*(3./4.))+1
-	x, h := 1, maxH-1
+	w, y := maxW-2, int(float64(maxH)*(3./4.))
+	x, h := 0, maxH-1
 	lines := (h - y) - 1
 
 	b := display.NewBox(x, y, w, h, s)

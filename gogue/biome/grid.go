@@ -43,14 +43,21 @@ func WallTile(x, y int) *Tile {
 
 // Grid is a 2D array consisting of tiles
 type Grid struct {
-	Tiles [][]*Tile
+	OffsetX int
+	OffsetY int
+	Tiles   [][]*Tile
 }
 
 // NewGrid creates a 'h by w' size grid to use as a playable map
-func NewGrid(w, h int) *Grid {
-	a := make([][]*Tile, h)
-	for i := range a {
-		a[i] = make([]*Tile, w)
+// width is generated first and then height to form the (x, y) indexing
+func NewGrid(x, y, w, h int) *Grid {
+	grid := make([][]*Tile, w)
+	for row := range grid {
+		grid[row] = make([]*Tile, h)
 	}
-	return &Grid{Tiles: a}
+	return &Grid{
+		Tiles:   grid,
+		OffsetX: x + 1,
+		OffsetY: y + 1,
+	}
 }

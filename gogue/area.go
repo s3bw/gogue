@@ -22,7 +22,7 @@ type Area struct {
 // NewArea creates a new playable area
 func NewArea(player *creature.Player, level int, s tcell.Screen) *Area {
 	maxW, maxH := s.Size()
-	x, y := 1, 1
+	x, y := 0, 0
 	w, h := maxW-2, int(float64(maxH)*(3./4.))
 	pX, pY := player.Creature.X, player.Creature.Y
 
@@ -65,7 +65,7 @@ func (a *Area) MoveCreature(obj *creature.Creature, dx, dy int) {
 	// 	}
 	// }
 	//if !target {
-	if a.Grid.Tiles[y][x].Passable {
+	if a.Grid.Tiles[x][y].Passable {
 		obj.Move(x, y)
 	}
 	// } else {
@@ -79,16 +79,13 @@ func (a *Area) Draw() {
 	st := tcell.StyleDefault
 
 	a.Box.Draw()
-	// a.Biome.Draw(a.Screen)
-	// x, y := b.parameters.x, b.parameters.y
-	// x, y := a.Biome.OffSet()
-	x, y := 2, 2
-	for ri, row := range a.Grid.Tiles {
-		for ci, tile := range row {
-			a.Screen.SetCell(x+ci, y+ri, st.Background(c), tile.Appearence)
+	offsetX, offsetY := a.Grid.OffsetX, a.Grid.OffsetY
+	for x, row := range a.Grid.Tiles {
+		for y, tile := range row {
+			a.Screen.SetCell(offsetX+x, offsetY+y, st.Background(c), tile.Appearence)
 		}
 	}
-	a.Player.Creature.Draw(x, y, a.Screen)
+	a.Player.Creature.Draw(offsetX, offsetY, a.Screen)
 
 	// This is where we should draw the contents of the game
 }

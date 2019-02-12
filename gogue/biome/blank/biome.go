@@ -66,10 +66,10 @@ func fromParametersImpl(parameters map[string]interface{}) (*BiomeParameters, er
 		biomeRooms:     rooms,
 		start:          start,
 		end:            end,
-		maxX:           parameters["maxX"].(int),
-		maxY:           parameters["maxY"].(int),
-		x:              parameters["x"].(int) + 1,
-		y:              parameters["y"].(int) + 1,
+		maxX:           parameters["maxX"].(int) - 1,
+		maxY:           parameters["maxY"].(int) - 1,
+		x:              parameters["x"].(int),
+		y:              parameters["y"].(int),
 	}
 	return params, nil
 }
@@ -77,9 +77,9 @@ func fromParametersImpl(parameters map[string]interface{}) (*BiomeParameters, er
 // New returns a constructed biome, if the linter fails it means
 // we haven't implemented all the required methods on the biome
 func New(params BiomeParameters) area.Biome {
-	x := params.maxX - params.x
-	y := params.maxY - params.y
-	grid := area.NewGrid(x, y)
+	w := params.maxX - params.x
+	h := params.maxY - params.y
+	grid := area.NewGrid(params.x, params.y, w, h)
 	return &biome{
 		parameters: params,
 		Grid:       *grid,
