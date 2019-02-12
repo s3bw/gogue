@@ -1,6 +1,7 @@
 package creature
 
 import (
+	"github.com/foxyblue/gogue/gogue/styles"
 	"github.com/gdamore/tcell"
 )
 
@@ -25,9 +26,17 @@ type ListCreatures struct {
 	list []*Creature
 }
 
-// func NewRabbit(x, y int) *Creature {
-//
-// }
+func NewRabbit(x, y int) *Creature {
+	style := styles.DefaultStyle()
+	return &Creature{
+		Name:       "Rabbit",
+		HP:         2,
+		X:          x,
+		Y:          y,
+		Style:      style,
+		Appearance: 'r',
+	}
+}
 
 func (c *Creature) Move(x, y int) {
 	c.X = x

@@ -1,6 +1,9 @@
 package biome
 
 import (
+	"math/rand"
+	"time"
+
 	"github.com/foxyblue/gogue/gogue/styles"
 	"github.com/gdamore/tcell"
 )
@@ -8,6 +11,17 @@ import (
 // Coord represents the location of a single point
 type Coord struct {
 	X, Y int
+}
+
+// RandomCoord generates a random co-ordinate
+func RandomCoord(minX, maxX, minY, maxY int) *Coord {
+	rand.Seed(time.Now().Unix())
+	x := (rand.Intn(maxX-minX) + minX)
+	y := (rand.Intn(maxY-minY) + minY)
+	return &Coord{
+		X: x,
+		Y: y,
+	}
 }
 
 // IsIn checks if x and y overlap a given list of co-ordinates
@@ -24,7 +38,7 @@ func IsIn(x, y int, list []*Coord) bool {
 type Tile struct {
 	Visible    bool
 	Passable   bool
-	Appearence rune
+	Appearance rune
 	Style      tcell.Style
 	coord      Coord
 }
@@ -36,7 +50,7 @@ func EmptyTile(x, y int) *Tile {
 		Visible:    false,
 		Passable:   true,
 		Style:      style,
-		Appearence: '·',
+		Appearance: '·',
 	}
 }
 
@@ -47,7 +61,7 @@ func WallTile(x, y int) *Tile {
 		Visible:    false,
 		Passable:   false,
 		Style:      style,
-		Appearence: '#',
+		Appearance: '#',
 	}
 }
 

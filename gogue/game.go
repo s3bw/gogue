@@ -36,8 +36,8 @@ func NewGame() *Game {
 
 	screen := newScreen()
 	player := creature.NewPlayer(playerX, playerY)
-	area := NewArea(player, level, screen)
 	feed := feed.NewFeed(screen)
+	area := NewArea(player, level, screen, feed)
 	return &Game{
 		Screen:     screen,
 		ActiveArea: area,
@@ -106,7 +106,6 @@ func Start() {
 			}
 			// Game steps exist here:
 			game.Draw()
-			game.Feed.Log("Step")
 		}
 	}()
 
