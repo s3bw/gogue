@@ -1,8 +1,8 @@
 package blank
 
 import (
-	area "github.com/foxyblue/gogue/gogue/area/biome"
-	"github.com/foxyblue/gogue/gogue/area/biome/factory"
+	area "github.com/foxyblue/gogue/gogue/biome"
+	"github.com/foxyblue/gogue/gogue/biome/factory"
 )
 
 const (

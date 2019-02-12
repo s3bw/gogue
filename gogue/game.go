@@ -1,16 +1,15 @@
-package main
+package gogue
 
 import (
 	"fmt"
 	"os"
 
-	"github.com/foxyblue/gogue/gogue/area"
 	"github.com/foxyblue/gogue/gogue/creature"
 	"github.com/foxyblue/gogue/gogue/feed"
 	"github.com/gdamore/tcell"
 
 	// Blank import registers the biomes
-	_ "github.com/foxyblue/gogue/gogue/area/biome/blank"
+	_ "github.com/foxyblue/gogue/gogue/biome/blank"
 )
 
 // Game holds the instance of the game
@@ -21,7 +20,7 @@ type Game struct {
 	Level int
 
 	// ActiveArea refers to the active area to which the player is in.
-	ActiveArea *area.Area
+	ActiveArea *Area
 
 	// Player refers to the user
 	Player *creature.Player
@@ -37,7 +36,7 @@ func NewGame() *Game {
 
 	screen := newScreen()
 	player := creature.NewPlayer(playerX, playerY)
-	area := area.NewArea(player, level, screen)
+	area := NewArea(player, level, screen)
 	feed := feed.NewFeed(screen)
 	return &Game{
 		Screen:     screen,
@@ -75,7 +74,8 @@ func (game *Game) Draw() {
 	game.Screen.Show()
 }
 
-func main() {
+// Start creates a game instance
+func Start() {
 	game := NewGame()
 	game.Feed.Log("A new game has started!")
 	player := game.Player.Creature

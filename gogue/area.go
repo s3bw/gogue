@@ -1,8 +1,8 @@
-package area
+package gogue
 
 import (
-	"github.com/foxyblue/gogue/gogue/area/biome"
-	"github.com/foxyblue/gogue/gogue/area/biome/factory"
+	"github.com/foxyblue/gogue/gogue/biome"
+	"github.com/foxyblue/gogue/gogue/biome/factory"
 	"github.com/foxyblue/gogue/gogue/creature"
 	"github.com/foxyblue/gogue/gogue/display"
 	"github.com/gdamore/tcell"

@@ -3,7 +3,7 @@ package factory
 import (
 	"fmt"
 
-	"github.com/foxyblue/gogue/gogue/area/biome"
+	"github.com/foxyblue/gogue/gogue/biome"
 )
 
 // biomeFactories stores an internal mapping between domains
