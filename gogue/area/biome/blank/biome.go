@@ -3,6 +3,7 @@ package blank
 import (
 	area "github.com/foxyblue/gogue/gogue/area/biome"
 	"github.com/foxyblue/gogue/gogue/area/biome/factory"
+	"github.com/gdamore/tcell"
 )
 
 const (
@@ -15,11 +16,14 @@ const (
 // BiomeParameters represents all the configuration options
 // for the biome.
 type BiomeParameters struct {
-	Grid           *area.Grid
 	biomeCreatures int
 	biomeRooms     int
 	start          *area.Coord
 	end            *area.Coord
+	x              int
+	y              int
+	maxX           int
+	maxY           int
 }
 
 func init() {
@@ -35,6 +39,7 @@ func (factory *blankBiomeFactory) Create(parameters map[string]interface{}) (are
 
 type biome struct {
 	parameters BiomeParameters
+	Grid       area.Grid
 }
 
 func fromParameters(parameters map[string]interface{}) (area.Biome, error) {
@@ -52,34 +57,55 @@ func fromParametersImpl(parameters map[string]interface{}) (*BiomeParameters, er
 		start     = &area.Coord{X: 10, Y: 10}
 		end       = &area.Coord{X: 20, Y: 20}
 	)
-	var x, y int
 
-	if parameters != nil {
-		if startXY, ok := parameters["start"]; ok {
-			start = startXY.(*area.Coord)
-		}
-		if maxX, ok := parameters["maxX"]; ok {
-			x = maxX.(int)
-		}
-		if maxY, ok := parameters["maxY"]; ok {
-			y = maxY.(int)
-		}
+	if startXY, ok := parameters["start"]; ok {
+		start = startXY.(*area.Coord)
 	}
 
-	grid := area.NewGrid(x, y)
 	params := &BiomeParameters{
 		biomeCreatures: creatures,
 		biomeRooms:     rooms,
 		start:          start,
 		end:            end,
-		Grid:           grid,
+		maxX:           parameters["maxX"].(int),
+		maxY:           parameters["maxY"].(int),
+		x:              parameters["x"].(int) + 1,
+		y:              parameters["y"].(int) + 1,
 	}
 	return params, nil
 }
 
+// New returns a constructed biome, if the linter fails it means
+// we haven't implemented all the required methods on the biome
 func New(params BiomeParameters) area.Biome {
-	// This will succeed once the interface is implemented
-	return &biome{parameters: params}
+	x := params.maxX - params.x
+	y := params.maxY - params.y
+	grid := area.NewGrid(x, y)
+	return &biome{
+		parameters: params,
+		Grid:       *grid,
+	}
+}
+
+func (b *biome) BuildBiome() {
+	g := b.Grid
+
+	room := []*area.Coord{
+		{X: 5, Y: 5},
+		{X: 4, Y: 5},
+		{X: 3, Y: 5},
+		{X: 2, Y: 5},
+	}
+
+	for x, row := range g.Tiles {
+		for y := range row {
+			if area.IsIn(x, y, room) {
+				row[y] = area.WallTile(x, y)
+			} else {
+				row[y] = area.EmptyTile(x, y)
+			}
+		}
+	}
 }
 
 func (b *biome) StartLocation() *area.Coord {
@@ -91,6 +117,16 @@ func (b *biome) EndLocation() *area.Coord {
 }
 
 func (b *biome) Generate() {
+	b.BuildBiome()
 }
 
-func (b *biome) Draw() {}
+func (b *biome) Draw(s tcell.Screen) {
+	x, y := b.parameters.x, b.parameters.y
+	c := tcell.Color(3 % s.Colors())
+	st := tcell.StyleDefault
+	for indexRow, row := range b.Grid.Tiles {
+		for indexCol, tile := range row {
+			s.SetCell(x+indexCol, y+indexRow, st.Background(c), tile.Appearence)
+		}
+	}
+}

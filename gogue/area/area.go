@@ -23,18 +23,9 @@ func NewArea(pX, pY, level int, s tcell.Screen) *Area {
 	w, h := maxW-2, int(float64(maxH)*(3./4.))
 
 	b := display.NewBox(x, y, w, h, s)
-
-	// Specify parameters for the new domain.
-	start := &biome.Coord{X: pX, Y: pY}
-	params := make(map[string]interface{})
-	params["start"] = start
-	params["maxX"], params["maxY"] = w, h
-
-	newBiome, err := factory.Create("blank", params)
-	if err != nil {
-		panic(err)
-	}
+	newBiome := NewBiome(x, y, pX, pY, w, h)
 	newBiome.Generate()
+
 	return &Area{
 		Box:    b,
 		Screen: s,
@@ -42,8 +33,20 @@ func NewArea(pX, pY, level int, s tcell.Screen) *Area {
 	}
 }
 
-// Move the domain stuff here...
-// func NewBiome() {}
+// NewBiome generates a new biome with given parameters
+func NewBiome(x, y, px, py, w, h int) biome.Biome {
+	start := &biome.Coord{X: px, Y: py}
+	params := make(map[string]interface{})
+	params["start"] = start
+	params["x"], params["y"] = x, y
+	params["maxX"], params["maxY"] = w, h
+
+	newBiome, err := factory.Create("blank", params)
+	if err != nil {
+		panic(err)
+	}
+	return newBiome
+}
 
 func (a *Area) playerXY() (int, int) {
 	coord := a.Biome.StartLocation()
@@ -53,7 +56,7 @@ func (a *Area) playerXY() (int, int) {
 // Draw the contents of the area
 func (a *Area) Draw() {
 	a.Box.Draw()
-	a.Biome.Draw()
+	a.Biome.Draw(a.Screen)
 
 	// This is where we should draw the contents of the game
 }
