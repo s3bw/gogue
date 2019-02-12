@@ -8,6 +8,9 @@ import (
 	"github.com/foxyblue/gogue/gogue/creature"
 	"github.com/foxyblue/gogue/gogue/feed"
 	"github.com/gdamore/tcell"
+
+	// Blank import registers the biomes
+	_ "github.com/foxyblue/gogue/gogue/area/biome/blank"
 )
 
 // Game holds the instance of the game
