@@ -65,9 +65,16 @@ func NewBiome(x, y, px, py, w, h int) biome.Biome {
 func (a *Area) MoveCreature(obj *creature.Creature, dx, dy int) {
 	var target *creature.Creature
 
+	// We should create an iterator to return
+	// player+creatures, creature e.t.c (Can't think of more use-cases
+	// atm.
+	// player := a.Player.Creature
+
 	x := obj.X + dx
 	y := obj.Y + dy
 	target = nil
+	// this iterable should include the player so it too can be
+	// a target.
 	for _, monster := range a.Creatures {
 		if monster.X == x && monster.Y == y {
 			target = monster

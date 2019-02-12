@@ -106,6 +106,7 @@ func Start() {
 			}
 			// Game steps exist here:
 			game.Draw()
+			// game.ActiveArea.EnemyStep()
 		}
 	}()
 
