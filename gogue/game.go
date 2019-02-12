@@ -78,7 +78,7 @@ func (game *Game) Draw() {
 func main() {
 	game := NewGame()
 	game.Feed.Log("A new game has started!")
-	grid := game.ActiveArea.Biome.GetGrid()
+	player := game.Player.Creature
 
 	// This is the Key Listener Channel
 	quit := make(chan struct{})
@@ -94,13 +94,13 @@ func main() {
 				case tcell.KeyRune:
 					switch ev.Rune() {
 					case 'k':
-						game.Player.Creature.Move(0, -1, grid)
+						game.ActiveArea.MoveCreature(player, 0, -1)
 					case 'j':
-						game.Player.Creature.Move(0, 1, grid)
+						game.ActiveArea.MoveCreature(player, 0, 1)
 					case 'h':
-						game.Player.Creature.Move(-1, 0, grid)
+						game.ActiveArea.MoveCreature(player, -1, 0)
 					case 'l':
-						game.Player.Creature.Move(1, 0, grid)
+						game.ActiveArea.MoveCreature(player, 1, 0)
 					}
 				}
 			}

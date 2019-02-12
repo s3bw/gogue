@@ -3,7 +3,6 @@ package blank
 import (
 	area "github.com/foxyblue/gogue/gogue/area/biome"
 	"github.com/foxyblue/gogue/gogue/area/biome/factory"
-	"github.com/gdamore/tcell"
 )
 
 const (
@@ -87,7 +86,7 @@ func New(params BiomeParameters) area.Biome {
 	}
 }
 
-func (b *biome) BuildBiome() {
+func (b *biome) Generate() {
 	g := b.Grid
 
 	room := []*area.Coord{
@@ -112,29 +111,10 @@ func (b *biome) GetGrid() area.Grid {
 	return b.Grid
 }
 
-func (b *biome) OffSet() (int, int) {
-	return b.parameters.x, b.parameters.y
-}
-
 func (b *biome) StartLocation() *area.Coord {
 	return b.parameters.start
 }
 
 func (b *biome) EndLocation() *area.Coord {
 	return b.parameters.end
-}
-
-func (b *biome) Generate() {
-	b.BuildBiome()
-}
-
-func (b *biome) Draw(s tcell.Screen) {
-	x, y := b.parameters.x, b.parameters.y
-	c := tcell.Color(3 % s.Colors())
-	st := tcell.StyleDefault
-	for indexRow, row := range b.Grid.Tiles {
-		for indexCol, tile := range row {
-			s.SetCell(x+indexCol, y+indexRow, st.Background(c), tile.Appearence)
-		}
-	}
 }

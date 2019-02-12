@@ -14,7 +14,7 @@ type Area struct {
 
 	Screen tcell.Screen
 
-	Biome biome.Biome
+	Grid biome.Grid
 
 	Player *creature.Player
 }
@@ -33,7 +33,8 @@ func NewArea(player *creature.Player, level int, s tcell.Screen) *Area {
 	return &Area{
 		Box:    b,
 		Screen: s,
-		Biome:  newBiome,
+		Grid:   newBiome.GetGrid(),
+		// Creatures: newBiome.GetCreatures(),
 		Player: player,
 	}
 }
@@ -53,17 +54,40 @@ func NewBiome(x, y, px, py, w, h int) biome.Biome {
 	return newBiome
 }
 
-func (a *Area) playerXY() (int, int) {
-	coord := a.Biome.StartLocation()
-	return coord.X, coord.Y
+func (a *Area) MoveCreature(obj *creature.Creature, dx, dy int) {
+	// var target creature.Creature
+
+	x := obj.X + dx
+	y := obj.Y + dy
+	// for creature := a.Creatures.Iterate() {
+	// 	if creature.X == x && creature.Y == y {
+	// 		target = creature
+	// 	}
+	// }
+	//if !target {
+	if a.Grid.Tiles[y][x].Passable {
+		obj.Move(x, y)
+	}
+	// } else {
+	// 	obj.Attack(target)
+	// }
 }
 
 // Draw the contents of the area
 func (a *Area) Draw() {
-	a.Box.Draw()
-	a.Biome.Draw(a.Screen)
+	c := tcell.Color(3 % a.Screen.Colors())
+	st := tcell.StyleDefault
 
-	x, y := a.Biome.OffSet()
+	a.Box.Draw()
+	// a.Biome.Draw(a.Screen)
+	// x, y := b.parameters.x, b.parameters.y
+	// x, y := a.Biome.OffSet()
+	x, y := 2, 2
+	for ri, row := range a.Grid.Tiles {
+		for ci, tile := range row {
+			a.Screen.SetCell(x+ci, y+ri, st.Background(c), tile.Appearence)
+		}
+	}
 	a.Player.Creature.Draw(x, y, a.Screen)
 
 	// This is where we should draw the contents of the game

@@ -1,7 +1,6 @@
 package creature
 
 import (
-	"github.com/foxyblue/gogue/gogue/area/biome"
 	"github.com/gdamore/tcell"
 )
 
@@ -14,6 +13,10 @@ type Creature struct {
 	Appearance rune
 }
 
+type ListCreatures struct {
+	list []*Creature
+}
+
 func NewCreature(x, y int) *Creature {
 	style := tcell.StyleDefault
 	return &Creature{
@@ -24,16 +27,7 @@ func NewCreature(x, y int) *Creature {
 	}
 }
 
-// Move is the creature's next action in the game
-func (c *Creature) Move(dx, dy int, grid biome.Grid) {
-	x := c.X + dx
-	y := c.Y + dy
-	if grid.Tiles[y][x].Passable {
-		c.move(x, y)
-	}
-}
-
-func (c *Creature) move(x, y int) {
+func (c *Creature) Move(x, y int) {
 	c.X = x
 	c.Y = y
 }
