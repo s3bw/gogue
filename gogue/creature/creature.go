@@ -1,7 +1,9 @@
 package creature
 
 import (
-	"github.com/foxyblue/gogue/gogue/styles"
+	"fmt"
+
+	"github.com/foxyblue/gogue/gogue/feed"
 	"github.com/gdamore/tcell"
 )
 
@@ -22,25 +24,23 @@ type Creature struct {
 	Appearance rune
 }
 
-type ListCreatures struct {
-	list []*Creature
-}
-
-func NewRabbit(x, y int) *Creature {
-	style := styles.DefaultStyle()
-	return &Creature{
-		Name:       "Rabbit",
-		HP:         2,
-		X:          x,
-		Y:          y,
-		Style:      style,
-		Appearance: 'r',
-	}
-}
-
 func (c *Creature) Move(x, y int) {
 	c.X = x
 	c.Y = y
+}
+
+func (c *Creature) Kill() {
+	c.Appearance = '%'
+}
+
+func (c *Creature) Attack(target *Creature, feed *feed.Feed) {
+	target.HP--
+	if target.HP <= 0 {
+		target.Kill()
+		feed.Log(fmt.Sprintf("The %s died!", target.Name))
+	} else {
+		feed.Log(fmt.Sprintf("%s hit, %d HP remaining!", target.Name, target.HP))
+	}
 }
 
 func (c *Creature) Draw(x, y int, screen tcell.Screen) {

@@ -1,8 +1,6 @@
 package gogue
 
 import (
-	"fmt"
-
 	"github.com/foxyblue/gogue/gogue/biome"
 	"github.com/foxyblue/gogue/gogue/biome/factory"
 	"github.com/foxyblue/gogue/gogue/creature"
@@ -62,20 +60,21 @@ func NewBiome(x, y, px, py, w, h int) biome.Biome {
 	return newBiome
 }
 
+// targetCreatures is effectively an iterator
+func (a *Area) targetCreatures() []*creature.Creature {
+	l := []*creature.Creature{}
+	list := append(l, a.Creatures...)
+	return append(list, a.Player.Creature)
+}
+
+// MoveCreature will move a creature in the area, checking for collisions
 func (a *Area) MoveCreature(obj *creature.Creature, dx, dy int) {
 	var target *creature.Creature
-
-	// We should create an iterator to return
-	// player+creatures, creature e.t.c (Can't think of more use-cases
-	// atm.
-	// player := a.Player.Creature
 
 	x := obj.X + dx
 	y := obj.Y + dy
 	target = nil
-	// this iterable should include the player so it too can be
-	// a target.
-	for _, monster := range a.Creatures {
+	for _, monster := range a.targetCreatures() {
 		if monster.X == x && monster.Y == y {
 			target = monster
 			break
@@ -86,8 +85,7 @@ func (a *Area) MoveCreature(obj *creature.Creature, dx, dy int) {
 			obj.Move(x, y)
 		}
 	} else {
-		a.Feed.Log(fmt.Sprintf("The %s is in your way!", target.Name))
-		// obj.Attack(target)
+		obj.Attack(target, a.Feed)
 	}
 }
 
@@ -105,6 +103,4 @@ func (a *Area) Draw() {
 		a.Screen.SetCell(offsetX+monster.X, offsetY+monster.Y, monster.Style, monster.Appearance)
 	}
 	a.Player.Creature.Draw(offsetX, offsetY, a.Screen)
-
-	// This is where we should draw the contents of the game
 }
