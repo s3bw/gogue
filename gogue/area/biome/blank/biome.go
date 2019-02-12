@@ -108,6 +108,14 @@ func (b *biome) BuildBiome() {
 	}
 }
 
+func (b *biome) GetGrid() area.Grid {
+	return b.Grid
+}
+
+func (b *biome) OffSet() (int, int) {
+	return b.parameters.x, b.parameters.y
+}
+
 func (b *biome) StartLocation() *area.Coord {
 	return b.parameters.start
 }

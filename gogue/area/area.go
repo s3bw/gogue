@@ -3,6 +3,7 @@ package area
 import (
 	"github.com/foxyblue/gogue/gogue/area/biome"
 	"github.com/foxyblue/gogue/gogue/area/biome/factory"
+	"github.com/foxyblue/gogue/gogue/creature"
 	"github.com/foxyblue/gogue/gogue/display"
 	"github.com/gdamore/tcell"
 )
@@ -14,13 +15,16 @@ type Area struct {
 	Screen tcell.Screen
 
 	Biome biome.Biome
+
+	Player *creature.Player
 }
 
 // NewArea creates a new playable area
-func NewArea(pX, pY, level int, s tcell.Screen) *Area {
+func NewArea(player *creature.Player, level int, s tcell.Screen) *Area {
 	maxW, maxH := s.Size()
 	x, y := 1, 1
 	w, h := maxW-2, int(float64(maxH)*(3./4.))
+	pX, pY := player.Creature.X, player.Creature.Y
 
 	b := display.NewBox(x, y, w, h, s)
 	newBiome := NewBiome(x, y, pX, pY, w, h)
@@ -30,6 +34,7 @@ func NewArea(pX, pY, level int, s tcell.Screen) *Area {
 		Box:    b,
 		Screen: s,
 		Biome:  newBiome,
+		Player: player,
 	}
 }
 
@@ -57,6 +62,9 @@ func (a *Area) playerXY() (int, int) {
 func (a *Area) Draw() {
 	a.Box.Draw()
 	a.Biome.Draw(a.Screen)
+
+	x, y := a.Biome.OffSet()
+	a.Player.Creature.Draw(x, y, a.Screen)
 
 	// This is where we should draw the contents of the game
 }

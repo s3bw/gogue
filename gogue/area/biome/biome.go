@@ -12,6 +12,12 @@ type Biome interface {
 	// contents with which the player interacts
 	Generate()
 
+	// GetGrid returns the tiled map
+	GetGrid() Grid
+
+	// OffSet returns the offset for the screen
+	OffSet() (int, int)
+
 	// StartLocation defines the point at which the player enters
 	// this is usually random.
 	StartLocation() *Coord

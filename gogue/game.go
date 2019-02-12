@@ -36,9 +36,9 @@ func NewGame() *Game {
 	playerX, playerY := 10, 10
 
 	screen := newScreen()
-	area := area.NewArea(playerX, playerY, level, screen)
-	feed := feed.NewFeed(screen)
 	player := creature.NewPlayer(playerX, playerY)
+	area := area.NewArea(player, level, screen)
+	feed := feed.NewFeed(screen)
 	return &Game{
 		Screen:     screen,
 		ActiveArea: area,
@@ -71,7 +71,6 @@ func newScreen() tcell.Screen {
 func (game *Game) Draw() {
 	game.Screen.Clear()
 	game.ActiveArea.Draw()
-	game.Player.Creature.Draw(game.Screen)
 	game.Feed.Draw()
 	game.Screen.Show()
 }
@@ -79,6 +78,7 @@ func (game *Game) Draw() {
 func main() {
 	game := NewGame()
 	game.Feed.Log("A new game has started!")
+	grid := game.ActiveArea.Biome.GetGrid()
 
 	// This is the Key Listener Channel
 	quit := make(chan struct{})
@@ -94,13 +94,13 @@ func main() {
 				case tcell.KeyRune:
 					switch ev.Rune() {
 					case 'k':
-						game.Player.Creature.Move(0, -1)
+						game.Player.Creature.Move(0, -1, grid)
 					case 'j':
-						game.Player.Creature.Move(0, 1)
+						game.Player.Creature.Move(0, 1, grid)
 					case 'h':
-						game.Player.Creature.Move(-1, 0)
+						game.Player.Creature.Move(-1, 0, grid)
 					case 'l':
-						game.Player.Creature.Move(1, 0)
+						game.Player.Creature.Move(1, 0, grid)
 					}
 				}
 			}

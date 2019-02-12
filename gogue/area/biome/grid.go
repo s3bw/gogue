@@ -23,20 +23,6 @@ type Tile struct {
 	coord      Coord
 }
 
-// Grid is a 2D array consisting of tiles
-type Grid struct {
-	Tiles [][]*Tile
-}
-
-// NewGrid creates a 'h by w' size grid to use as a playable map
-func NewGrid(w, h int) *Grid {
-	a := make([][]*Tile, h)
-	for i := range a {
-		a[i] = make([]*Tile, w)
-	}
-	return &Grid{Tiles: a}
-}
-
 // EmptyTile represents an empty space
 func EmptyTile(x, y int) *Tile {
 	return &Tile{
@@ -53,4 +39,18 @@ func WallTile(x, y int) *Tile {
 		Passable:   false,
 		Appearence: '#',
 	}
+}
+
+// Grid is a 2D array consisting of tiles
+type Grid struct {
+	Tiles [][]*Tile
+}
+
+// NewGrid creates a 'h by w' size grid to use as a playable map
+func NewGrid(w, h int) *Grid {
+	a := make([][]*Tile, h)
+	for i := range a {
+		a[i] = make([]*Tile, w)
+	}
+	return &Grid{Tiles: a}
 }
