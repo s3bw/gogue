@@ -15,7 +15,6 @@ type Feed struct {
 	Queue Queue
 }
 
-// NewArea creates a new playable area
 func NewFeed(s tcell.Screen) *Feed {
 	maxW, maxH := s.Size()
 	w, y := maxW-2, int(float64(maxH)*(3./4.))
@@ -42,14 +41,15 @@ func (f *Feed) Log(text string) {
 
 func (f *Feed) Draw() {
 	s := f.Box.Screen
-	st := tcell.StyleDefault
 	f.Box.Draw()
 
 	y := f.Box.Y + 1
 	for text := range f.Queue.Iterate() {
 		x := f.Box.X + 1
 		for _, l := range text {
-			s.SetCell(x, y, st.Background(f.Box.BackgroundColor), l)
+			// This has inherited the Box.Style, but we should
+			// actually have each message getting it's own style
+			s.SetCell(x, y, f.Box.Style, l)
 			x++
 		}
 		y++

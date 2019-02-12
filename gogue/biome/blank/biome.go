@@ -88,7 +88,6 @@ func New(params BiomeParameters) area.Biome {
 
 func (b *biome) Generate() {
 	g := b.Grid
-
 	room := []*area.Coord{
 		{X: 5, Y: 5},
 		{X: 4, Y: 5},

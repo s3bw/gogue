@@ -6,9 +6,17 @@ import (
 
 // Creature defines the creature
 type Creature struct {
+
+	// Name is the name of the creature
+	Name string
+
+	// HP are the hit points this creature has
+	HP int
+
+	// X, Y are the co ordinates of the creature
 	X, Y int
 
-	background tcell.Style
+	Style tcell.Style
 
 	Appearance rune
 }
@@ -17,15 +25,9 @@ type ListCreatures struct {
 	list []*Creature
 }
 
-func NewCreature(x, y int) *Creature {
-	style := tcell.StyleDefault
-	return &Creature{
-		X:          x,
-		Y:          y,
-		background: style.Background(tcell.Color(tcell.ColorBlack)),
-		Appearance: '@',
-	}
-}
+// func NewRabbit(x, y int) *Creature {
+//
+// }
 
 func (c *Creature) Move(x, y int) {
 	c.X = x
@@ -33,5 +35,5 @@ func (c *Creature) Move(x, y int) {
 }
 
 func (c *Creature) Draw(x, y int, screen tcell.Screen) {
-	screen.SetCell(c.X+x, c.Y+y, c.background, c.Appearance)
+	screen.SetCell(c.X+x, c.Y+y, c.Style, c.Appearance)
 }

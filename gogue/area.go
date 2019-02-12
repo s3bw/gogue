@@ -75,14 +75,11 @@ func (a *Area) MoveCreature(obj *creature.Creature, dx, dy int) {
 
 // Draw the contents of the area
 func (a *Area) Draw() {
-	c := tcell.Color(3 % a.Screen.Colors())
-	st := tcell.StyleDefault
-
 	a.Box.Draw()
 	offsetX, offsetY := a.Grid.OffsetX, a.Grid.OffsetY
 	for x, row := range a.Grid.Tiles {
 		for y, tile := range row {
-			a.Screen.SetCell(offsetX+x, offsetY+y, st.Background(c), tile.Appearence)
+			a.Screen.SetCell(offsetX+x, offsetY+y, tile.Style, tile.Appearence)
 		}
 	}
 	a.Player.Creature.Draw(offsetX, offsetY, a.Screen)

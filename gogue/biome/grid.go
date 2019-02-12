@@ -1,5 +1,10 @@
 package biome
 
+import (
+	"github.com/foxyblue/gogue/gogue/styles"
+	"github.com/gdamore/tcell"
+)
+
 // Coord represents the location of a single point
 type Coord struct {
 	X, Y int
@@ -20,23 +25,28 @@ type Tile struct {
 	Visible    bool
 	Passable   bool
 	Appearence rune
+	Style      tcell.Style
 	coord      Coord
 }
 
 // EmptyTile represents an empty space
 func EmptyTile(x, y int) *Tile {
+	style := styles.DefaultStyle()
 	return &Tile{
 		Visible:    false,
 		Passable:   true,
-		Appearence: '.',
+		Style:      style,
+		Appearence: '·',
 	}
 }
 
 // WallTile represents a wall
 func WallTile(x, y int) *Tile {
+	style := styles.DefaultStyle()
 	return &Tile{
 		Visible:    false,
 		Passable:   false,
+		Style:      style,
 		Appearence: '#',
 	}
 }
