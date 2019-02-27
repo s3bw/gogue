@@ -17,8 +17,9 @@ func playerCreature(x, y int) *Creature {
 		Type:       TypeCreature,
 	}
 	return &Creature{
-		Base: &base,
-		HP:   10,
+		Base:     &base,
+		HP:       10,
+		Strength: 15,
 	}
 }
 

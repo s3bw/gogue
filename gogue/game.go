@@ -79,7 +79,6 @@ func Start() {
 	game := NewGame()
 	game.Feed.Log("A new game has started!")
 	player := game.Player
-	// rabbit := game.ActiveArea.Creatures[0]
 
 	// This is the Key Listener Channel
 	quit := make(chan struct{})
@@ -102,15 +101,8 @@ func Start() {
 						game.ActiveArea.MoveCreature(player, -1, 0)
 					case 'l':
 						game.ActiveArea.MoveCreature(player, 1, 0)
-						// Debug by moving the rabbit
-						// case 'w':
-						// 	game.ActiveArea.MoveCreature(rabbit, 0, -1)
-						// case 'a':
-						// 	game.ActiveArea.MoveCreature(rabbit, -1, 0)
-						// case 's':
-						// 	game.ActiveArea.MoveCreature(rabbit, 0, 1)
-						// case 'd':
-						// 	game.ActiveArea.MoveCreature(rabbit, 1, 0)
+					case 'g':
+						game.ActiveArea.Pickup(player)
 					}
 				}
 			}

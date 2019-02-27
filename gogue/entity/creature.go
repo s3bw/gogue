@@ -14,8 +14,17 @@ type Creature struct {
 
 	// HP are the hit points this creature has
 	HP int
+
+	Backpack []Item
+
+	Strength int
 }
 
+func (c *Creature) CanCarry(weight int) bool {
+	return c.Strength > weight
+}
+
+// Identify returns the type associated with the creature
 func (c *Creature) Identify() Type {
 	return c.Base.Type
 }
@@ -33,8 +42,8 @@ func (c *Creature) Move(x, y int) {
 func (c *Creature) Kill() {
 	c.Base.ChangeAppearence('%')
 	c.Base.MakeItem()
-	style := styles.DeadStyle()
-	c.Base.ChangeStyle(style)
+	dead := styles.DeadStyle()
+	c.Base.ChangeStyle(dead)
 }
 
 func (c *Creature) Attack(target *Creature, feed *feed.Feed) {

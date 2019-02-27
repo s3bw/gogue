@@ -17,6 +17,22 @@ func NewRabbit(x, y int) *entity.Creature {
 	}
 	return &entity.Creature{
 		Base: &base,
-		HP:   2,
+		HP:   5,
+	}
+}
+
+func NewSword(x, y int) *entity.Item {
+	style := styles.DefaultStyle()
+	base := entity.Base{
+		Name:       "Sword",
+		X:          x,
+		Y:          y,
+		Style:      style,
+		Appearance: '/',
+		Type:       entity.TypeItem,
+	}
+	return &entity.Item{
+		Base:   &base,
+		Weight: 3,
 	}
 }

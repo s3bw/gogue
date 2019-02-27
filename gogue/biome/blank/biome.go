@@ -85,7 +85,7 @@ func New(params BiomeParameters) area.Biome {
 	return &biome{
 		parameters:   params,
 		Grid:         *grid,
-		ListEntities: make([]entity.Entity, 1), //params.biomeCreatures),
+		ListEntities: make([]entity.Entity, 2), //params.biomeCreatures),
 	}
 }
 
@@ -96,6 +96,9 @@ func (b *biome) Generate() {
 
 	rabbit := NewRabbit(randomCoord.X, randomCoord.Y)
 	b.ListEntities[0] = rabbit
+
+	sword := NewSword(6, 6)
+	b.ListEntities[1] = sword
 
 	g := b.Grid
 	room := []*area.Coord{
