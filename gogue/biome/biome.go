@@ -1,6 +1,6 @@
 package biome
 
-import "github.com/foxyblue/gogue/gogue/creature"
+import "github.com/foxyblue/gogue/gogue/entity"
 
 // Biome represents the level with which the player interacts
 type Biome interface {
@@ -11,7 +11,7 @@ type Biome interface {
 	// GetGrid returns the tiled map
 	GetGrid() Grid
 
-	GetCreatures() []*creature.Creature
+	GetCreatures() []*entity.Creature
 
 	// StartLocation defines the point at which the player enters
 	// this is usually random.

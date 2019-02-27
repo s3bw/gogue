@@ -1,15 +1,19 @@
-package creature
+package entity
 
 import "github.com/foxyblue/gogue/gogue/styles"
 
 func NewRabbit(x, y int) *Creature {
 	style := styles.DefaultStyle()
-	return &Creature{
+	ent := entity{
 		Name:       "Rabbit",
-		HP:         2,
 		X:          x,
 		Y:          y,
 		Style:      style,
 		Appearance: 'r',
+		Type:       Beast,
+	}
+	return &Creature{
+		entity: &ent,
+		HP:     2,
 	}
 }

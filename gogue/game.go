@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/foxyblue/gogue/gogue/creature"
+	"github.com/foxyblue/gogue/gogue/entity"
 	"github.com/foxyblue/gogue/gogue/feed"
 	"github.com/gdamore/tcell"
 
@@ -23,7 +23,7 @@ type Game struct {
 	ActiveArea *Area
 
 	// Player refers to the user
-	Player *creature.Player
+	Player *entity.Player
 
 	// stdFeed is the in game feed
 	Feed *feed.Feed
@@ -35,7 +35,7 @@ func NewGame() *Game {
 	playerX, playerY := 10, 10
 
 	screen := newScreen()
-	player := creature.NewPlayer(playerX, playerY)
+	player := entity.NewPlayer(playerX, playerY)
 	feed := feed.NewFeed(screen)
 	area := NewArea(player, level, screen, feed)
 	return &Game{

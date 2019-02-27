@@ -1,4 +1,4 @@
-package creature
+package entity
 
 import "github.com/foxyblue/gogue/gogue/styles"
 
@@ -8,13 +8,17 @@ type Player struct {
 
 func playerCreature(x, y int) *Creature {
 	style := styles.DefaultStyle()
-	return &Creature{
+	ent := entity{
 		Name:       "Player",
-		HP:         10,
 		X:          x,
 		Y:          y,
 		Style:      style,
 		Appearance: '@',
+		Type:       Beast,
+	}
+	return &Creature{
+		entity: &ent,
+		HP:     10,
 	}
 }
 

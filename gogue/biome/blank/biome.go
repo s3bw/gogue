@@ -3,7 +3,7 @@ package blank
 import (
 	area "github.com/foxyblue/gogue/gogue/biome"
 	"github.com/foxyblue/gogue/gogue/biome/factory"
-	"github.com/foxyblue/gogue/gogue/creature"
+	"github.com/foxyblue/gogue/gogue/entity"
 )
 
 const (
@@ -40,7 +40,7 @@ func (factory *blankBiomeFactory) Create(parameters map[string]interface{}) (are
 type biome struct {
 	parameters    BiomeParameters
 	Grid          area.Grid
-	ListCreatures []*creature.Creature
+	ListCreatures []*entity.Creature
 }
 
 func fromParameters(parameters map[string]interface{}) (area.Biome, error) {
@@ -85,7 +85,7 @@ func New(params BiomeParameters) area.Biome {
 	return &biome{
 		parameters:    params,
 		Grid:          *grid,
-		ListCreatures: make([]*creature.Creature, 1), //params.biomeCreatures),
+		ListCreatures: make([]*entity.Creature, 1), //params.biomeCreatures),
 	}
 }
 
@@ -94,7 +94,7 @@ func (b *biome) Generate() {
 		b.parameters.x, b.parameters.maxX,
 		b.parameters.y, b.parameters.maxY)
 
-	rabbit := creature.NewRabbit(randomCoord.X, randomCoord.Y)
+	rabbit := entity.NewRabbit(randomCoord.X, randomCoord.Y)
 	b.ListCreatures[0] = rabbit
 
 	g := b.Grid
@@ -120,7 +120,7 @@ func (b *biome) GetGrid() area.Grid {
 	return b.Grid
 }
 
-func (b *biome) GetCreatures() []*creature.Creature {
+func (b *biome) GetCreatures() []*entity.Creature {
 	return b.ListCreatures
 }
 

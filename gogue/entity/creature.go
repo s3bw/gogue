@@ -1,4 +1,4 @@
-package creature
+package entity
 
 import (
 	"fmt"
@@ -9,28 +9,19 @@ import (
 
 // Creature defines the creature
 type Creature struct {
-
-	// Name is the name of the creature
-	Name string
+	*entity
 
 	// HP are the hit points this creature has
 	HP int
-
-	// X, Y are the co ordinates of the creature
-	X, Y int
-
-	Style tcell.Style
-
-	Appearance rune
 }
 
 func (c *Creature) Move(x, y int) {
-	c.X = x
-	c.Y = y
+	c.entity.X = x
+	c.entity.Y = y
 }
 
 func (c *Creature) Kill() {
-	c.Appearance = '%'
+	c.entity.Appearance = '%'
 }
 
 func (c *Creature) Attack(target *Creature, feed *feed.Feed) {
@@ -44,5 +35,6 @@ func (c *Creature) Attack(target *Creature, feed *feed.Feed) {
 }
 
 func (c *Creature) Draw(x, y int, screen tcell.Screen) {
-	screen.SetCell(c.X+x, c.Y+y, c.Style, c.Appearance)
+	entity := c.entity
+	screen.SetCell(entity.X+x, entity.Y+y, entity.Style, entity.Appearance)
 }
