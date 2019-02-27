@@ -6,13 +6,20 @@ import "github.com/gdamore/tcell"
 type Type string
 
 const (
-	// Beast entities move around the map
-	Beast Type = "Beast"
-	// Item entities can be picked up
-	Item Type = "Item"
+	// TypeCreature entities move around the map
+	TypeCreature Type = "Creature"
+	// TypeItem entities can be picked up
+	TypeItem Type = "Item"
 )
 
-type entity struct {
+// Entity represents the interface an object on the map should have
+type Entity interface {
+	Identify() Type
+	Draw(x, y int, screen tcell.Screen)
+}
+
+// Base are the initial attributes one needs for an entity on the map
+type Base struct {
 	Name       string
 	X          int
 	Y          int
@@ -21,8 +28,14 @@ type entity struct {
 	Type       Type
 }
 
-// Entity represents the interface an object on the map should have
-type Entity interface {
-	Identify() Type
-	Draw(x, y int, screen tcell.Screen)
+func (b *Base) ChangeStyle(style tcell.Style) {
+	b.Style = style
+}
+
+func (b *Base) ChangeAppearence(r rune) {
+	b.Appearance = r
+}
+
+func (b *Base) MakeItem() {
+	b.Type = TypeItem
 }

@@ -38,9 +38,9 @@ func (factory *blankBiomeFactory) Create(parameters map[string]interface{}) (are
 }
 
 type biome struct {
-	parameters    BiomeParameters
-	Grid          area.Grid
-	ListCreatures []*entity.Creature
+	parameters   BiomeParameters
+	Grid         area.Grid
+	ListEntities []entity.Entity
 }
 
 func fromParameters(parameters map[string]interface{}) (area.Biome, error) {
@@ -83,9 +83,9 @@ func New(params BiomeParameters) area.Biome {
 	h := params.maxY - params.y
 	grid := area.NewGrid(params.x, params.y, w, h)
 	return &biome{
-		parameters:    params,
-		Grid:          *grid,
-		ListCreatures: make([]*entity.Creature, 1), //params.biomeCreatures),
+		parameters:   params,
+		Grid:         *grid,
+		ListEntities: make([]entity.Entity, 1), //params.biomeCreatures),
 	}
 }
 
@@ -94,8 +94,8 @@ func (b *biome) Generate() {
 		b.parameters.x, b.parameters.maxX,
 		b.parameters.y, b.parameters.maxY)
 
-	rabbit := entity.NewRabbit(randomCoord.X, randomCoord.Y)
-	b.ListCreatures[0] = rabbit
+	rabbit := NewRabbit(randomCoord.X, randomCoord.Y)
+	b.ListEntities[0] = rabbit
 
 	g := b.Grid
 	room := []*area.Coord{
@@ -120,8 +120,8 @@ func (b *biome) GetGrid() area.Grid {
 	return b.Grid
 }
 
-func (b *biome) GetCreatures() []*entity.Creature {
-	return b.ListCreatures
+func (b *biome) GetEntities() []entity.Entity {
+	return b.ListEntities
 }
 
 func (b *biome) StartLocation() *area.Coord {

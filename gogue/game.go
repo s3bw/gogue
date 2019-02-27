@@ -23,7 +23,7 @@ type Game struct {
 	ActiveArea *Area
 
 	// Player refers to the user
-	Player *entity.Player
+	Player *entity.Creature
 
 	// stdFeed is the in game feed
 	Feed *feed.Feed
@@ -60,8 +60,8 @@ func newScreen() tcell.Screen {
 		os.Exit(1)
 	}
 	s.SetStyle(tcell.StyleDefault.
-		Foreground(tcell.ColorBlack).
-		Background(tcell.ColorWhite))
+		Foreground(tcell.ColorWhite).
+		Background(tcell.ColorBlack))
 	s.Clear()
 	return s
 }
@@ -78,7 +78,7 @@ func (game *Game) Draw() {
 func Start() {
 	game := NewGame()
 	game.Feed.Log("A new game has started!")
-	player := game.Player.Creature
+	player := game.Player
 	// rabbit := game.ActiveArea.Creatures[0]
 
 	// This is the Key Listener Channel

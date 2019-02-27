@@ -17,31 +17,32 @@ type Area struct {
 
 	Grid biome.Grid
 
-	Creatures []*entity.Creature
+	// Entities is a list of the map entities
+	Entities []entity.Entity
 
-	Player *entity.Player
+	Player *entity.Creature
 
 	Feed *feed.Feed
 }
 
 // NewArea creates a new playable area
-func NewArea(player *entity.Player, level int, s tcell.Screen, feed *feed.Feed) *Area {
+func NewArea(player *entity.Creature, level int, s tcell.Screen, feed *feed.Feed) *Area {
 	maxW, maxH := s.Size()
 	x, y := 0, 0
 	w, h := maxW-2, int(float64(maxH)*(3./4.))
-	pX, pY := player.Creature.X, player.Creature.Y
+	pX, pY := player.X, player.Y
 
 	b := display.NewBox(x, y, w, h, s)
 	newBiome := NewBiome(x, y, pX, pY, w, h)
 	newBiome.Generate()
 
 	return &Area{
-		Box:       b,
-		Screen:    s,
-		Grid:      newBiome.GetGrid(),
-		Creatures: newBiome.GetCreatures(),
-		Player:    player,
-		Feed:      feed,
+		Box:      b,
+		Screen:   s,
+		Grid:     newBiome.GetGrid(),
+		Entities: newBiome.GetEntities(),
+		Player:   player,
+		Feed:     feed,
 	}
 }
 
@@ -60,40 +61,6 @@ func NewBiome(x, y, px, py, w, h int) biome.Biome {
 	return newBiome
 }
 
-// targetCreatures is effectively an iterator
-func (a *Area) targetCreatures() []*entity.Creature {
-	l := []*entity.Creature{}
-	list := append(l, a.Creatures...)
-	return append(list, a.Player.Creature)
-}
-
-// MoveCreature will move a creature in the area, checking for collisions
-func (a *Area) MoveCreature(obj *entity.Creature, dx, dy int) {
-	var target *entity.Creature
-
-	x := obj.X + dx
-	y := obj.Y + dy
-	target = nil
-	// I'm going to have to use an iterator which filters
-	// for types.
-	for _, monster := range a.targetCreatures() {
-		if monster.X == x && monster.Y == y {
-			target = monster
-			break
-		}
-	}
-	if target == nil {
-		if a.Grid.Tiles[x][y].Passable {
-			obj.Move(x, y)
-		}
-	} else {
-		// This can kill, when a creature dies, it transforms
-		// into an object. I won't have to remove it from the
-		// list. I might have to replace it.
-		obj.Attack(target, a.Feed)
-	}
-}
-
 // Draw the contents of the area
 func (a *Area) Draw() {
 	a.Box.Draw()
@@ -104,8 +71,8 @@ func (a *Area) Draw() {
 		}
 	}
 
-	for _, monster := range a.Creatures {
-		a.Screen.SetCell(offsetX+monster.X, offsetY+monster.Y, monster.Style, monster.Appearance)
+	for _, e := range a.Entities {
+		e.Draw(offsetX, offsetY, a.Screen)
 	}
-	a.Player.Creature.Draw(offsetX, offsetY, a.Screen)
+	a.Player.Draw(offsetX, offsetY, a.Screen)
 }

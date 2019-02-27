@@ -4,24 +4,37 @@ import (
 	"fmt"
 
 	"github.com/foxyblue/gogue/gogue/feed"
+	"github.com/foxyblue/gogue/gogue/styles"
 	"github.com/gdamore/tcell"
 )
 
 // Creature defines the creature
 type Creature struct {
-	*entity
+	*Base
 
 	// HP are the hit points this creature has
 	HP int
 }
 
+func (c *Creature) Identify() Type {
+	return c.Base.Type
+}
+
+func (c *Creature) Draw(x, y int, screen tcell.Screen) {
+	entity := c.Base
+	screen.SetCell(entity.X+x, entity.Y+y, entity.Style, entity.Appearance)
+}
+
 func (c *Creature) Move(x, y int) {
-	c.entity.X = x
-	c.entity.Y = y
+	c.Base.X = x
+	c.Base.Y = y
 }
 
 func (c *Creature) Kill() {
-	c.entity.Appearance = '%'
+	c.Base.ChangeAppearence('%')
+	c.Base.MakeItem()
+	style := styles.DeadStyle()
+	c.Base.ChangeStyle(style)
 }
 
 func (c *Creature) Attack(target *Creature, feed *feed.Feed) {
@@ -32,9 +45,4 @@ func (c *Creature) Attack(target *Creature, feed *feed.Feed) {
 	} else {
 		feed.Log(fmt.Sprintf("%s hit, %d HP remaining!", target.Name, target.HP))
 	}
-}
-
-func (c *Creature) Draw(x, y int, screen tcell.Screen) {
-	entity := c.entity
-	screen.SetCell(entity.X+x, entity.Y+y, entity.Style, entity.Appearance)
 }

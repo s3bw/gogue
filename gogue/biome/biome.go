@@ -11,7 +11,7 @@ type Biome interface {
 	// GetGrid returns the tiled map
 	GetGrid() Grid
 
-	GetCreatures() []*entity.Creature
+	GetEntities() []entity.Entity
 
 	// StartLocation defines the point at which the player enters
 	// this is usually random.
