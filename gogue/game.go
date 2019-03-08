@@ -15,22 +15,21 @@ import (
 
 // Game holds the instance of the game
 type Game struct {
+	// Screen holds the terminal screen we draw into
 	Screen tcell.Screen
-
 	// Level refers to the level at which the active area exists
 	Level int
-
 	// ActiveArea refers to the active area to which the player is in.
 	ActiveArea *Area
-
 	// Player refers to the user
 	Player *entity.Creature
-
 	// stdFeed is the in game feed
-	Feed *feed.Feed
-
+	Feed                *feed.Feed
 	ShowEquipmentScreen bool
-	EquipmentScreen     *equipment.Screen
+
+	// We might not have to create a pointer to this, and deploy it
+	// only when asked for.. vv
+	EquipmentScreen *equipment.Screen
 }
 
 // NewGame creates a new game instance
@@ -91,12 +90,46 @@ func (game *Game) ToggleEquipmentScreen() {
 	game.ShowEquipmentScreen = true
 }
 
+// These keys could be consts in a key.go
+func IsActionKey(k rune) bool {
+	var actionKeys = []rune{
+		'k', 'j', 'h', 'l', 'g',
+	}
+	for _, v := range actionKeys {
+		if k == v {
+			return true
+		}
+	}
+	return false
+}
+
+// PlayerAction contains the actions a player can take
+func (game *Game) PlayerAction(p *entity.Creature, key rune) {
+	switch key {
+	// Moves the player up.
+	case 'k':
+		game.ActiveArea.MoveCreature(p, 0, -1)
+	// Moves the player down.
+	case 'j':
+		game.ActiveArea.MoveCreature(p, 0, 1)
+	// Moves the player left.
+	case 'h':
+		game.ActiveArea.MoveCreature(p, -1, 0)
+	// Moves the player right.
+	case 'l':
+		game.ActiveArea.MoveCreature(p, 1, 0)
+	// Has the player pickup an item they stand on
+	case 'g':
+		game.ActiveArea.Pickup(p)
+	}
+}
+
 // Start creates a game instance
 func Start() {
 	game := NewGame()
 	game.Feed.Log("A new game has started!")
 	player := game.Player
-	playerTurnTaken := false
+	turnTaken := false
 	game.Draw()
 
 	// This is the Key Listener Channel
@@ -111,32 +144,28 @@ func Start() {
 					close(quit)
 					return
 				case tcell.KeyRune:
-					switch ev.Rune() {
-					case 'k':
-						game.ActiveArea.MoveCreature(player, 0, -1)
-						playerTurnTaken = true
-					case 'j':
-						game.ActiveArea.MoveCreature(player, 0, 1)
-						playerTurnTaken = true
-					case 'h':
-						game.ActiveArea.MoveCreature(player, -1, 0)
-						playerTurnTaken = true
-					case 'l':
-						game.ActiveArea.MoveCreature(player, 1, 0)
-						playerTurnTaken = true
-					case 'g':
-						game.ActiveArea.Pickup(player)
-						playerTurnTaken = true
-					case 'i':
+					key := ev.Rune()
+					switch {
+					// If the key is an action key we have the player take
+					// an action, which means they have taken a turn.
+					// When implementing equipment screen we might have to
+					// use the same keys.
+					// (IsActionKey(key) && EquipScreenToggled)
+					case IsActionKey(key):
+						game.PlayerAction(player, key)
+						turnTaken = true
+					// Below are non-action keys, these allow the player
+					// to do thing that will not cost a turn.
+					case key == 'i':
 						game.ToggleEquipmentScreen()
 					}
 				}
 			}
 			game.Draw()
-			if playerTurnTaken {
+			if turnTaken {
 				// Game steps exist here:
 				game.ActiveArea.Turn()
-				playerTurnTaken = false
+				turnTaken = false
 			}
 		}
 	}()
