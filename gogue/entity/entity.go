@@ -10,6 +10,10 @@ const (
 	TypeCreature Type = "Creature"
 	// TypeItem entities can be picked up
 	TypeItem Type = "Item"
+	// TypeOrnamentation are passable and can not be picked up
+	// for example corpses appear as a mark on the map but
+	// nothing can be done with the corpse currently.
+	TypeOrnamentation Type = "Ornamentation"
 )
 
 // Entity represents the interface an object on the map should have
@@ -36,6 +40,6 @@ func (b *Base) ChangeAppearence(r rune) {
 	b.Appearance = r
 }
 
-func (b *Base) MakeItem() {
-	b.Type = TypeItem
+func (b *Base) MakeOrnamentation() {
+	b.Type = TypeOrnamentation
 }
