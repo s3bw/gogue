@@ -41,7 +41,7 @@ func (c *Creature) Move(x, y int) {
 
 func (c *Creature) Kill() {
 	c.Base.ChangeAppearence('%')
-	c.Base.MakeItem()
+	c.Base.MakeOrnamentation()
 	dead := styles.DeadStyle()
 	c.Base.ChangeStyle(dead)
 }

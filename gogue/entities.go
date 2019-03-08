@@ -7,11 +7,13 @@ import (
 	"github.com/foxyblue/gogue/gogue/entity"
 )
 
-// GetCreatures is effectively an iterator
+// GetCreatures returns a slice of all creatures on the map
 func (a *Area) GetCreatures() []*entity.Creature {
 	var list []*entity.Creature
 
 	for _, i := range a.Entities {
+		// Identify the type of entity on the map if it's a
+		// creature add to list.
 		if i.Identify() == entity.TypeCreature {
 			list = append(list, i.(*entity.Creature))
 		}
@@ -19,6 +21,8 @@ func (a *Area) GetCreatures() []*entity.Creature {
 	return list
 }
 
+// GetAllCreatures does the same as GetCreatures but includes
+// the player in the list.
 func (a *Area) GetAllCreatures() []*entity.Creature {
 	var list []*entity.Creature
 
@@ -30,6 +34,8 @@ func (a *Area) GetAllCreatures() []*entity.Creature {
 	return append(list, a.Player)
 }
 
+// GetItems returns a slice of all items on the map that
+// can be picked up.
 func (a *Area) GetItems() []*entity.Item {
 	var list []*entity.Item
 
@@ -41,6 +47,7 @@ func (a *Area) GetItems() []*entity.Item {
 	return list
 }
 
+// RemoveFromMap will remove an item entity from the map
 func RemoveFromMap(target *entity.Item, entities []entity.Entity) []entity.Entity {
 	var targetIndex int
 
