@@ -167,6 +167,10 @@ func Start() {
 				game.ActiveArea.Turn()
 				turnTaken = false
 			}
+			// Instant Quit, this should be solved
+			if player.HP <= 0 {
+				close(quit)
+			}
 		}
 	}()
 
